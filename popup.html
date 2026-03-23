@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 300px;
+            padding: 15px;
+            font-family: sans-serif;
+            background: #1e1e2e;
+            color: #cdd6f4;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #89b4fa;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            background: #313244;
+            color: white;
+            border: 1px solid #45475a;
+            border-radius: 4px;
+        }
+
+        .save-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background: #a6e3a1;
+            color: #11111b;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Promptizer Settings</h2>
+    <label for="persona">Default Optimization:</label>
+    <select id="persona">
+        <option value="general">General & Balanced</option>
+        </option>
+        <option value="coder">Software Developer</option>
+        <option value="creative">Creative Writer</option>
+        <option value>="academics">Academics / Research</option>
+    </select>
+    <button class="save-btn" id="saveBtn">Save Preference</button>
+    <script src="popup.js"></script>
+</body>
+
+</html>
