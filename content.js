@@ -88,13 +88,6 @@ container.innerHTML = `
         }
         .apply-btn:hover { background: #74c7ec; }
 
-        /* --- LOADER CSS --- */
-        @keyframes pulse {
-          0% { fill: #2d2d2d; opacity: 1; }
-          50% { fill: #444444; opacity: 0.6; }
-          100% { fill: #2d2d2d; opacity: 1; }
-        }
-        .skeleton { animation: pulse 1.8s ease-in-out infinite; }
 
         .promptizer-result-card {
           background-color: #111;
@@ -170,36 +163,43 @@ btn.addEventListener('click', () => {
     btn.style.color = '#888888';
     btn.style.boxShadow = 'none';
 
-    // Show the animated SVG loader
+    // 1. Force the main popup container to become the black box
     suggestionBox.style.display = 'flex';
+    suggestionBox.style.backgroundColor = '#111111';
+    suggestionBox.style.border = '1px solid #333333';
+    suggestionBox.style.borderRadius = '8px';
+    suggestionBox.style.boxShadow = '0 10px 30px rgba(0,0,0,0.9)';
+    suggestionBox.style.padding = '0';
+
+    // 2. The new HTML (pure HTML skeleton loader, no SVG)
     suggestionBox.innerHTML = `
-      <div class="suggestion-header">
-        <span>✨ Optimizing...</span>
-        <button class="close-btn" id="close-btn-loading">✖</button>
+      <style>
+        @keyframes pulse {
+          0% { background-color: #2d2d2d; opacity: 1; }
+          50% { background-color: #444444; opacity: 0.6; }
+          100% { background-color: #2d2d2d; opacity: 1; }
+        }
+        .skeleton-bar {
+          border-radius: 4px;
+          animation: pulse 1.8s ease-in-out infinite;
+        }
+      </style>
+
+      <div style="background-color: #1a1a1a; padding: 12px 16px; border-top-left-radius: 8px; border-top-right-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;">
+        <span style="color: #888888; font-family: monospace; font-size: 13px; letter-spacing: 1px;">Processing...</span>
+        <span id="close-btn-loading" style="color: #666666; cursor: pointer; font-family: sans-serif; font-size: 16px;">✖</span>
       </div>
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 250px; background: transparent;">
+
+      <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px; background-color: #111111; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
         
-        <svg style="width: 100%; max-width: 350px; height: auto;" viewBox="240 110 420 270" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="traceGradient1" x1="250" y1="120" x2="100" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
-            <linearGradient id="traceGradient2" x1="650" y1="120" x2="800" y2="300" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
-          </defs>
-
-          <g id="browser">
-            <rect x="250" y="120" width="400" height="250" rx="8" ry="8" fill="#111111" stroke="#333333" stroke-width="2" filter="drop-shadow(0 0 15px rgba(0,0,0,0.9))"></rect>
-            <rect x="250" y="120" width="400" height="35" rx="8" ry="8" fill="#1a1a1a"></rect>
-            
-            <rect x="270" y="175" width="360" height="15" class="skeleton" fill="#2d2d2d"></rect>
-            <rect x="270" y="205" width="200" height="15" class="skeleton" fill="#2d2d2d"></rect>
-            <rect x="270" y="235" width="300" height="15" class="skeleton" fill="#2d2d2d"></rect>
-            <rect x="270" y="265" width="360" height="70" class="skeleton" fill="#2d2d2d"></rect>
-          </g>
-        </svg>
-
-        <div style="margin-top: 20px; font-family: monospace; color: #888888 !important; font-size: 16px; letter-spacing: 1px; animation: pulse 1.8s ease-in-out infinite;">
+        <div class="skeleton-bar" style="width: 100%; height: 18px;"></div>
+        <div class="skeleton-bar" style="width: 60%; height: 14px;"></div>
+        <div class="skeleton-bar" style="width: 85%; height: 14px;"></div>
+        <div class="skeleton-bar" style="width: 100%; height: 90px; margin-top: 8px;"></div>
+        
+        <div style="margin-top: 20px; text-align: center; font-family: monospace; color: #888888; font-size: 15px; animation: pulse 1.8s ease-in-out infinite; background-color: transparent !important;">
           AI is thinking harder...
         </div>
-
       </div>
     `;
 
@@ -209,6 +209,9 @@ btn.addEventListener('click', () => {
         closeBtnLoading.addEventListener('click', () => {
             suggestionBox.style.display = 'none';
             btn.innerText = "⚡ Promptize";
+            btn.style.background = 'linear-gradient(135deg, #00ff7f, #00bfff)';
+            btn.style.color = '#000';
+            btn.style.boxShadow = '0 0 15px rgba(0, 255, 127, 0.4)';
         });
     }
 
