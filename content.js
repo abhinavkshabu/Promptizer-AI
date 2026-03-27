@@ -88,57 +88,13 @@ container.innerHTML = `
         }
         .apply-btn:hover { background: #74c7ec; }
 
-        /* --- THE LOADER CSS --- */
-        .main-container {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          max-width: 450px;
-          background-color: #0a0a0a;
-          border-radius: 8px;
-          padding: 20px;
-          box-sizing: border-box;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .loader { width: 100%; height: auto; }
-        #browser { overflow: hidden; }
-        .grid-line { stroke: #1a1a1a; stroke-width: 0.5; }
-        .browser-frame { fill: #111; stroke: #333; stroke-width: 1; filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.9)); }
-        .browser-top { fill: #1a1a1a; }
-        .skeleton { fill: #2d2d2d; rx: 4; ry: 4; animation: pulse 1.8s ease-in-out infinite; }
-
+        /* --- LOADER CSS --- */
         @keyframes pulse {
           0% { fill: #2d2d2d; opacity: 1; }
-          50% { fill: #444444; opacity: 0.7; }
+          50% { fill: #444444; opacity: 0.6; }
           100% { fill: #2d2d2d; opacity: 1; }
         }
-
-        .trace-flow {
-          stroke-width: 1; fill: none; stroke-dasharray: 120 600; stroke-dashoffset: 720;
-          animation: flow 5s linear infinite; opacity: 0.7; stroke-linejoin: round;
-          filter: blur(0.5px); color: #aaaaaa;
-        }
-        .trace-flow:nth-child(1) { stroke: url(#traceGradient1); }
-        .trace-flow:nth-child(2) { stroke: url(#traceGradient2); }
-        .trace-flow:nth-child(3) { stroke: url(#traceGradient3); }
-        .trace-flow:nth-child(4) { stroke: url(#traceGradient4); }
-
-        @keyframes flow {
-          from { stroke-dashoffset: 720; }
-          to { stroke-dashoffset: 0; }
-        }
-
-        /* --- THE TEXT LOADER & RESULT CARD CSS --- */
-        .skeleton-text-container {
-          margin-top: 20px;
-          font-family: monospace;
-          color: #888888;
-          font-size: 15px;
-          letter-spacing: 1px;
-          animation: pulse 1.8s ease-in-out infinite;
-        }
+        .skeleton { animation: pulse 1.8s ease-in-out infinite; }
 
         .promptizer-result-card {
           background-color: #111;
@@ -210,6 +166,9 @@ btn.addEventListener('click', () => {
     }
 
     btn.innerText = "⏳ Thinking...";
+    btn.style.background = '#1a1a1a';
+    btn.style.color = '#888888';
+    btn.style.boxShadow = 'none';
 
     // Show the animated SVG loader
     suggestionBox.style.display = 'flex';
@@ -218,36 +177,29 @@ btn.addEventListener('click', () => {
         <span>✨ Optimizing...</span>
         <button class="close-btn" id="close-btn-loading">✖</button>
       </div>
-      <div class="main-container">
-        <div class="loader">
-          <svg viewBox="230 100 440 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-            <defs>
-              <linearGradient id="traceGradient1" x1="250" y1="120" x2="100" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
-              <linearGradient id="traceGradient2" x1="650" y1="120" x2="800" y2="300" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
-              <linearGradient id="traceGradient3" x1="250" y1="380" x2="400" y2="400" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
-              <linearGradient id="traceGradient4" x1="650" y1="120" x2="500" y2="100" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
-            </defs>
-            <g id="grid">
-              <line x1="0" y1="100" x2="100%" y2="100" class="grid-line"></line><line x1="0" y1="200" x2="100%" y2="200" class="grid-line"></line><line x1="0" y1="300" x2="100%" y2="300" class="grid-line"></line><line x1="0" y1="400" x2="100%" y2="400" class="grid-line"></line>
-            </g>
-            <g id="browser" transform="translate(0, 0)">
-              <rect x="250" y="120" width="400" height="260" rx="6" ry="6" class="browser-frame"></rect>
-              <rect x="250" y="120" width="400" height="30" rx="6" ry="6" class="browser-top"></rect>
-              <rect x="270" y="170" width="360" height="15" class="skeleton"></rect>
-              <rect x="270" y="195" width="200" height="12" class="skeleton"></rect>
-              <rect x="270" y="215" width="300" height="12" class="skeleton"></rect>
-              <rect x="270" y="240" width="360" height="80" class="skeleton"></rect>
-              <rect x="270" y="335" width="180" height="15" class="skeleton"></rect>
-            </g>
-            <g id="traces" transform="translate(0, 0)">
-              <path d="M100 300 H250 V120" class="trace-flow"></path>
-              <path d="M800 200 H650 V380" class="trace-flow"></path>
-              <path d="M400 520 V380 H250" class="trace-flow"></path>
-              <path d="M500 50 V120 H650" class="trace-flow"></path>
-            </g>
-          </svg>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 250px; background: transparent;">
+        
+        <svg style="width: 100%; max-width: 350px; height: auto;" viewBox="240 110 420 270" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="traceGradient1" x1="250" y1="120" x2="100" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+            <linearGradient id="traceGradient2" x1="650" y1="120" x2="800" y2="300" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+          </defs>
+
+          <g id="browser">
+            <rect x="250" y="120" width="400" height="250" rx="8" ry="8" fill="#111111" stroke="#333333" stroke-width="2" filter="drop-shadow(0 0 15px rgba(0,0,0,0.9))"></rect>
+            <rect x="250" y="120" width="400" height="35" rx="8" ry="8" fill="#1a1a1a"></rect>
+            
+            <rect x="270" y="175" width="360" height="15" class="skeleton" fill="#2d2d2d"></rect>
+            <rect x="270" y="205" width="200" height="15" class="skeleton" fill="#2d2d2d"></rect>
+            <rect x="270" y="235" width="300" height="15" class="skeleton" fill="#2d2d2d"></rect>
+            <rect x="270" y="265" width="360" height="70" class="skeleton" fill="#2d2d2d"></rect>
+          </g>
+        </svg>
+
+        <div style="margin-top: 20px; font-family: monospace; color: #888888 !important; font-size: 16px; letter-spacing: 1px; animation: pulse 1.8s ease-in-out infinite;">
+          AI is thinking harder...
         </div>
-        <div class="skeleton-text-container">AI is thinking harder...</div>
+
       </div>
     `;
 
@@ -267,6 +219,9 @@ btn.addEventListener('click', () => {
         context: aiContext
     }, (response) => {
         btn.innerText = "⚡ Promptize"; // Reset button
+        btn.style.background = 'linear-gradient(135deg, #00ff7f, #00bfff)';
+        btn.style.color = '#000';
+        btn.style.boxShadow = '0 0 15px rgba(0, 255, 127, 0.4)';
 
         if (response && response.optimizedText && !response.optimizedText.includes("Error")) {
             currentOptimizedText = response.optimizedText;
