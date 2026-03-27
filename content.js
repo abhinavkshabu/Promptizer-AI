@@ -94,29 +94,31 @@ container.innerHTML = `
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          width: 280px;
-          height: 280px;
-          background: transparent;
-          overflow: hidden;
+          width: 100%;
+          max-width: 450px;
+          background-color: #0a0a0a;
+          border-radius: 8px;
+          padding: 20px;
+          box-sizing: border-box;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
-        .loader { width: 100%; height: 100%; }
+        .loader { width: 100%; height: auto; }
         #browser { overflow: hidden; }
-        .grid-line { stroke: #222; stroke-width: 0.5; }
-        .browser-frame { fill: #111; stroke: #666; stroke-width: 1; filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.9)); }
+        .grid-line { stroke: #1a1a1a; stroke-width: 0.5; }
+        .browser-frame { fill: #111; stroke: #333; stroke-width: 1; filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.9)); }
         .browser-top { fill: #1a1a1a; }
-        .loading-text { font-family: sans-serif; font-size: 14px; fill: #e4e4e4; }
-        .skeleton { fill: #2d2d2d; rx: 4; ry: 4; animation: pulse 1.8s ease-in-out infinite; filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.02)); }
+        .skeleton { fill: #2d2d2d; rx: 4; ry: 4; animation: pulse 1.8s ease-in-out infinite; }
 
         @keyframes pulse {
           0% { fill: #2d2d2d; opacity: 1; }
-          50% { fill: #505050; opacity: 0.6; }
+          50% { fill: #444444; opacity: 0.7; }
           100% { fill: #2d2d2d; opacity: 1; }
         }
 
         .trace-flow {
           stroke-width: 1; fill: none; stroke-dasharray: 120 600; stroke-dashoffset: 720;
-          animation: flow 5s linear infinite; opacity: 0.95; stroke-linejoin: round;
-          filter: drop-shadow(0 0 8px currentColor) blur(0.5px); color: #00ccff;
+          animation: flow 5s linear infinite; opacity: 0.7; stroke-linejoin: round;
+          filter: blur(0.5px); color: #aaaaaa;
         }
         .trace-flow:nth-child(1) { stroke: url(#traceGradient1); }
         .trace-flow:nth-child(2) { stroke: url(#traceGradient2); }
@@ -130,10 +132,11 @@ container.innerHTML = `
 
         /* --- THE TEXT LOADER & RESULT CARD CSS --- */
         .skeleton-text-container {
-          margin-top: -30px;
+          margin-top: 20px;
           font-family: monospace;
-          color: #00ccff;
-          font-size: 14px;
+          color: #888888;
+          font-size: 15px;
+          letter-spacing: 1px;
           animation: pulse 1.8s ease-in-out infinite;
         }
 
@@ -217,29 +220,30 @@ btn.addEventListener('click', () => {
       </div>
       <div class="main-container">
         <div class="loader">
-          <svg viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <svg viewBox="230 100 440 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
             <defs>
-              <linearGradient id="traceGradient1" x1="250" y1="120" x2="100" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ccff" stop-opacity="1"></stop><stop offset="100%" stop-color="#00ccff" stop-opacity="0.5"></stop></linearGradient>
-              <linearGradient id="traceGradient2" x1="650" y1="120" x2="800" y2="300" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ccff" stop-opacity="1"></stop><stop offset="100%" stop-color="#00ccff" stop-opacity="0.5"></stop></linearGradient>
-              <linearGradient id="traceGradient3" x1="250" y1="380" x2="400" y2="400" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ccff" stop-opacity="1"></stop><stop offset="100%" stop-color="#00ccff" stop-opacity="0.5"></stop></linearGradient>
-              <linearGradient id="traceGradient4" x1="650" y1="120" x2="500" y2="100" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00ccff" stop-opacity="1"></stop><stop offset="100%" stop-color="#00ccff" stop-opacity="0.5"></stop></linearGradient>
+              <linearGradient id="traceGradient1" x1="250" y1="120" x2="100" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+              <linearGradient id="traceGradient2" x1="650" y1="120" x2="800" y2="300" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+              <linearGradient id="traceGradient3" x1="250" y1="380" x2="400" y2="400" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+              <linearGradient id="traceGradient4" x1="650" y1="120" x2="500" y2="100" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
             </defs>
             <g id="grid">
-              <line x1="0" y1="0" x2="0" y2="100%" class="grid-line"></line><line x1="100" y1="0" x2="100" y2="100%" class="grid-line"></line><line x1="200" y1="0" x2="200" y2="100%" class="grid-line"></line><line x1="300" y1="0" x2="300" y2="100%" class="grid-line"></line><line x1="400" y1="0" x2="400" y2="100%" class="grid-line"></line><line x1="500" y1="0" x2="500" y2="100%" class="grid-line"></line><line x1="600" y1="0" x2="600" y2="100%" class="grid-line"></line><line x1="700" y1="0" x2="700" y2="100%" class="grid-line"></line><line x1="800" y1="0" x2="800" y2="100%" class="grid-line"></line><line x1="900" y1="0" x2="900" y2="100%" class="grid-line"></line>
-              <line x1="0" y1="100" x2="100%" y2="100" class="grid-line"></line><line x1="0" y1="200" x2="100%" y2="200" class="grid-line"></line><line x1="0" y1="300" x2="100%" y2="300" class="grid-line"></line><line x1="0" y1="400" x2="100%" y2="400" class="grid-line"></line><line x1="0" y1="500" x2="100%" y2="500" class="grid-line"></line><line x1="0" y1="600" x2="100%" y2="600" class="grid-line"></line><line x1="0" y1="700" x2="100%" y2="700" class="grid-line"></line><line x1="0" y1="800" x2="100%" y2="800" class="grid-line"></line>
+              <line x1="0" y1="100" x2="100%" y2="100" class="grid-line"></line><line x1="0" y1="200" x2="100%" y2="200" class="grid-line"></line><line x1="0" y1="300" x2="100%" y2="300" class="grid-line"></line><line x1="0" y1="400" x2="100%" y2="400" class="grid-line"></line>
             </g>
-            <g id="browser" transform="translate(0, 200)">
-              <rect x="250" y="120" width="400" height="260" rx="8" ry="8" class="browser-frame"></rect>
-              <rect x="250" y="120" width="400" height="30" rx="8" ry="8" class="browser-top"></rect>
-              <text x="294" y="140" text-anchor="middle" class="loading-text">Loading...</text>
-              <rect x="270" y="160" width="360" height="20" class="skeleton"></rect>
-              <rect x="270" y="190" width="200" height="15" class="skeleton"></rect>
-              <rect x="270" y="215" width="300" height="15" class="skeleton"></rect>
-              <rect x="270" y="240" width="360" height="90" class="skeleton"></rect>
-              <rect x="270" y="340" width="180" height="20" class="skeleton"></rect>
+            <g id="browser" transform="translate(0, 0)">
+              <rect x="250" y="120" width="400" height="260" rx="6" ry="6" class="browser-frame"></rect>
+              <rect x="250" y="120" width="400" height="30" rx="6" ry="6" class="browser-top"></rect>
+              <rect x="270" y="170" width="360" height="15" class="skeleton"></rect>
+              <rect x="270" y="195" width="200" height="12" class="skeleton"></rect>
+              <rect x="270" y="215" width="300" height="12" class="skeleton"></rect>
+              <rect x="270" y="240" width="360" height="80" class="skeleton"></rect>
+              <rect x="270" y="335" width="180" height="15" class="skeleton"></rect>
             </g>
-            <g id="traces" transform="translate(0, 200)">
-              <path d="M100 300 H250 V120" class="trace-flow"></path><path d="M800 200 H650 V380" class="trace-flow"></path><path d="M400 520 V380 H250" class="trace-flow"></path><path d="M500 50 V120 H650" class="trace-flow"></path>
+            <g id="traces" transform="translate(0, 0)">
+              <path d="M100 300 H250 V120" class="trace-flow"></path>
+              <path d="M800 200 H650 V380" class="trace-flow"></path>
+              <path d="M400 520 V380 H250" class="trace-flow"></path>
+              <path d="M500 50 V120 H650" class="trace-flow"></path>
             </g>
           </svg>
         </div>
