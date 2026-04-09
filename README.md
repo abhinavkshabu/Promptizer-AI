@@ -25,67 +25,96 @@ Before you begin, ensure you have the following installed on your computer:
 ## 🚀 How to Run Locally
 
 ### Step 1: Clone the Repository
+
 Open your terminal and clone this repository to your local machine:
+
 ```bash
-git clone [https://github.com/abhinavkshabu/Promptizer-AI.git](https://github.com/abhinavkshabu/Promptizer-AI.git)
-cd Promptizer-AI 
+git clone https://github.com/abhinavkshabu/Promptizer-AI.git
+cd Promptizer-AI
+```
+
+---
+
 ### Step 2: Setup the Backend Server
+
 The extension relies on a Node.js backend to securely communicate with the Groq API.
 
-Install the required server dependencies:
+1. Install the required server dependencies:
 
-Bash
+```bash
 npm install
-In the root directory, create a hidden file named exactly .env.
+```
 
-Open the .env file and paste your Groq API key inside it like this:
+2. In the root directory, create a hidden file named exactly `.env`.
 
-Code snippet
+3. Open the `.env` file and paste your Groq API key inside it like this:
+
+```
 GROQ_API_KEY=gsk_your_api_key_here
-(Note: Never upload this .env file to GitHub!)
+```
 
-Start the local server:
+> ⚠️ **Note:** Never upload this `.env` file to GitHub!
 
-Bash
+4. Start the local server:
+
+```bash
 npm start
+```
+
+---
+
 ### Step 3: Configure the Extension
+
 By default, the extension points to the live cloud server. To run it locally, tell the extension to talk to your local computer.
 
-Open background.js in your code editor.
+1. Open `background.js` in your code editor.
 
-Find the fetch() URL and change it to your local server:
+2. Find the `fetch()` URL and change it to your local server:
 
-JavaScript
-fetch('[http://127.0.0.1:3000/api/optimize](http://127.0.0.1:3000/api/optimize)', { ... })
-Save the file.
+```javascript
+fetch('http://127.0.0.1:3000/api/optimize', { ... })
+```
+
+3. Save the file.
+
+---
 
 ### Step 4: Install the Extension in Chrome
-Open Google Chrome and type chrome://extensions/ in the URL bar.
 
-In the top right corner, toggle Developer mode to ON.
+1. Open Google Chrome and type `chrome://extensions/` in the URL bar.
 
-Click the Load unpacked button in the top left.
+2. In the top right corner, toggle **Developer mode** to **ON**.
 
-Select the main Promptizer-AI folder (the one containing manifest.json).
+3. Click the **Load unpacked** button in the top left.
 
-Pin the extension to your Chrome toolbar for easy access.
+4. Select the main `Promptizer-AI` folder (the one containing `manifest.json`).
 
-### 💡 Usage
-Make sure your local Node.js server (or Render server) is running.
+5. Pin the extension to your Chrome toolbar for easy access.
 
-Open Gemini, ChatGPT, or Claude.
+---
 
-Type a lazy or basic prompt into the chat box.
+## 💡 Usage
 
-Click the ⚡ Promptize button that appears below the chat box.
+1. Make sure your local Node.js server (or Render server) is running.
 
-Watch the animated UI process your request, and click Insert Prompt to drop the elite prompt into your chat!
+2. Open **Gemini**, **ChatGPT**, or **Claude**.
 
-### 🔒 Privacy & Architecture
-Frontend: Standard Manifest V3 Chrome Extension architecture (content.js, background.js).
+3. Type a lazy or basic prompt into the chat box.
 
-Backend: Express.js REST API hosted on Render. Kept separate to ensure API keys are never exposed to the client-side browser.
+4. Click the **⚡ Promptize** button that appears below the chat box.
 
-Data: Prompts are processed temporarily in memory. No user data or chat logs are permanently stored on the server.
+5. Watch the animated UI process your request, and click **Insert Prompt** to drop the elite prompt into your chat!
 
-Engineered by Abhinav Shabu
+---
+
+## 🔒 Privacy & Architecture
+
+* **Frontend:** Standard Manifest V3 Chrome Extension architecture (`content.js`, `background.js`).
+
+* **Backend:** Express.js REST API hosted on Render. Kept separate to ensure API keys are never exposed to the client-side browser.
+
+* **Data:** Prompts are processed temporarily in memory. No user data or chat logs are permanently stored on the server.
+
+---
+
+Engineered by **Abhinav Shabu**
