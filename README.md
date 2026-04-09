@@ -28,8 +28,8 @@ Before you begin, ensure you have the following installed on your computer:
 Open your terminal and clone this repository to your local machine:
 ```bash
 git clone [https://github.com/abhinavkshabu/Promptizer-AI.git](https://github.com/abhinavkshabu/Promptizer-AI.git)
-cd Promptizer-AI
-Step 2: Setup the Backend Server
+cd Promptizer-AI 
+### Step 2: Setup the Backend Server
 The extension relies on a Node.js backend to securely communicate with the Groq API.
 
 Install the required server dependencies:
@@ -48,7 +48,7 @@ Start the local server:
 
 Bash
 npm start
-Step 3: Configure the Extension
+### Step 3: Configure the Extension
 By default, the extension points to the live cloud server. To run it locally, tell the extension to talk to your local computer.
 
 Open background.js in your code editor.
@@ -59,7 +59,7 @@ JavaScript
 fetch('[http://127.0.0.1:3000/api/optimize](http://127.0.0.1:3000/api/optimize)', { ... })
 Save the file.
 
-Step 4: Install the Extension in Chrome
+### Step 4: Install the Extension in Chrome
 Open Google Chrome and type chrome://extensions/ in the URL bar.
 
 In the top right corner, toggle Developer mode to ON.
@@ -70,7 +70,7 @@ Select the main Promptizer-AI folder (the one containing manifest.json).
 
 Pin the extension to your Chrome toolbar for easy access.
 
-💡 Usage
+### 💡 Usage
 Make sure your local Node.js server (or Render server) is running.
 
 Open Gemini, ChatGPT, or Claude.
@@ -81,7 +81,7 @@ Click the ⚡ Promptize button that appears below the chat box.
 
 Watch the animated UI process your request, and click Insert Prompt to drop the elite prompt into your chat!
 
-🔒 Privacy & Architecture
+### 🔒 Privacy & Architecture
 Frontend: Standard Manifest V3 Chrome Extension architecture (content.js, background.js).
 
 Backend: Express.js REST API hosted on Render. Kept separate to ensure API keys are never exposed to the client-side browser.
