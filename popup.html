@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            width: 340px;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: #0d0d14;
+            color: #cdd6f4;
+            margin: 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8553f4, #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h2 {
+            margin: 0;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            color: #6c7086;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: #a6adc8;
+            margin-bottom: 6px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #1a1a2e;
+            color: #e4e4e4;
+            border: 1px solid #2a2a3e;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236c7086' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #8553f4;
+        }
+
+        optgroup {
+            color: #8553f4;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        option {
+            color: #e4e4e4;
+            background: #1a1a2e;
+            padding: 6px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #2a2a3e, transparent);
+            margin: 16px 0;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8553f4, #3b82f6);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(133, 83, 244, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(133, 83, 244, 0.4);
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .badge-new {
+            background: rgba(0, 255, 127, 0.15);
+            color: #00ff7f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-icon">P</div>
+        <div>
+            <h2>Promptizer</h2>
+            <div class="subtitle">AI Prompt Engineering Assistant</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <label for="framework">Prompting Framework</label>
+        <select id="framework">
+            <optgroup label="── General ──">
+                <option value="general">⚡ General & Balanced</option>
+                <option value="creative">✍️ Creative Writing</option>
+                <option value="academics">🎓 Academics & Research</option>
+            </optgroup>
+            <optgroup label="── Technical ──">
+                <option value="coding">💻 Coding & Development</option>
+                <option value="data_science">📊 Data Science & Analytics</option>
+                <option value="devops">🛠️ DevOps & Cloud</option>
+            </optgroup>
+            <optgroup label="── Creative & Media ──">
+                <option value="image_gen">🎨 Image Generation (DALL·E, Midjourney, SD)</option>
+                <option value="video_gen">🎬 Video Generation (Sora, Runway, Kling)</option>
+                <option value="audio_gen">🎵 Audio & Music Generation</option>
+            </optgroup>
+            <optgroup label="── Professional ──">
+                <option value="business">💼 Business & Strategy</option>
+                <option value="marketing">📣 Marketing & Copywriting</option>
+                <option value="legal">⚖️ Legal & Compliance</option>
+                <option value="medical">🏥 Medical & Healthcare</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+        <label for="persona">AI Persona Style</label>
+        <select id="persona">
+            <option value="expert">🧠 Expert & Detailed</option>
+            <option value="concise">⚡ Concise & Direct</option>
+            <option value="teacher">📚 Teacher & Explainer</option>
+            <option value="peer">🤝 Peer & Collaborative</option>
+        </select>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="save-btn" id="saveBtn">Save Preferences</button>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
