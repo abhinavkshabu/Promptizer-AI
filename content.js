@@ -143,7 +143,7 @@ function createPButton() {
   pBtn.title = 'Promptize your text';
   
   // Use the uploaded image as the logo
-  const logoUrl = chrome.runtime.getURL('icons/p_logo.png');
+  const logoUrl = chrome.runtime.getURL('icons/icon48.png');
   pBtn.innerHTML = `<img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain; pointer-events: none;" alt="Promptizer" />`;
   
   // Fixed positioning overlay
@@ -505,7 +505,7 @@ function handlePromptize(triggerBtn) {
 }
 
 function resetPButton(btn) {
-  const logoUrl = chrome.runtime.getURL('icons/p_logo.png');
+  const logoUrl = chrome.runtime.getURL('icons/icon48.png');
   btn.innerHTML = `<img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain; pointer-events: none;" alt="Promptizer" />`;
   btn.style.background = 'transparent';
 }
