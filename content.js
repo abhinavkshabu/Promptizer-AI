@@ -141,42 +141,38 @@ function createPButton() {
   const pBtn = document.createElement('div');
   pBtn.id = 'promptizer-p-trigger';
   pBtn.title = 'Promptize your text';
-  pBtn.innerHTML = 'P';
+  
+  // Use the uploaded image as the logo
+  const logoUrl = chrome.runtime.getURL('icons/p_logo.png');
+  pBtn.innerHTML = `<img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain; pointer-events: none;" alt="Promptizer" />`;
   
   // Fixed positioning overlay
   Object.assign(pBtn.style, {
-    width: '28px',
-    height: '28px',
+    width: '32px',
+    height: '32px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'linear-gradient(135deg, #8553f4, #3b82f6)',
-    color: '#fff',
+    background: 'transparent',
     border: 'none',
-    borderRadius: '6px',
     cursor: 'pointer',
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    fontWeight: '800',
-    fontSize: '14px',
-    boxShadow: '0 2px 8px rgba(133, 83, 244, 0.4)',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease', // Only animate aesthetic properties
+    transition: 'transform 0.2s ease, opacity 0.2s ease', 
     zIndex: '2147483647',
-    position: 'fixed', // Vital for tracking overlay
+    position: 'fixed', 
     userSelect: 'none',
-    lineHeight: '1',
-    pointerEvents: 'auto',
-    left: '-9999px', // Start hidden offscreen
-    top: '-9999px'
+    pointerEvents: 'none', // Hidden initially
+    opacity: '0',
+    left: '-9999px',
+    top: '-9999px',
+    filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.2))' // Subtle shadow for the image
   });
 
   // Hover effects
   pBtn.addEventListener('mouseenter', () => {
-    pBtn.style.transform = 'scale(1.1)';
-    pBtn.style.boxShadow = '0 4px 16px rgba(133, 83, 244, 0.6)';
+    pBtn.style.transform = 'scale(1.15)';
   });
   pBtn.addEventListener('mouseleave', () => {
     pBtn.style.transform = 'scale(1)';
-    pBtn.style.boxShadow = '0 2px 8px rgba(133, 83, 244, 0.4)';
   });
 
   // Click handler — main Promptize logic
@@ -203,16 +199,22 @@ function updatePButtonPosition() {
 
   const chatInput = findChatInput();
   if (!chatInput) {
-    pBtnInstance.style.display = 'none';
+    pBtnInstance.style.opacity = '0';
+    pBtnInstance.style.pointerEvents = 'none';
     return;
   }
   
-  pBtnInstance.style.display = 'flex';
-
   if (chatInput.tagName === 'TEXTAREA') {
      const rect = chatInput.getBoundingClientRect();
-     pBtnInstance.style.left = (rect.right - 40) + 'px';
-     pBtnInstance.style.top = (rect.bottom - 40) + 'px';
+     if (chatInput.value.trim().length > 0) {
+       pBtnInstance.style.opacity = '1';
+       pBtnInstance.style.pointerEvents = 'auto';
+       pBtnInstance.style.left = (rect.right - 40) + 'px';
+       pBtnInstance.style.top = (rect.bottom - 40) + 'px';
+     } else {
+       pBtnInstance.style.opacity = '0';
+       pBtnInstance.style.pointerEvents = 'none';
+     }
      return;
   }
 
@@ -225,8 +227,11 @@ function updatePButtonPosition() {
     }
   }
 
-  // If we found text, track the end of it
+  // If we found text and it's not just empty spaces
   if (lastTextNode && chatInput.textContent.trim().length > 0) {
+    pBtnInstance.style.opacity = '1';
+    pBtnInstance.style.pointerEvents = 'auto';
+    
     const range = document.createRange();
     range.setStart(lastTextNode, lastTextNode.length);
     range.setEnd(lastTextNode, lastTextNode.length);
@@ -235,7 +240,7 @@ function updatePButtonPosition() {
     const height = rect.height || 24;
     
     let x = rect.right + 10;
-    let y = rect.top + (height / 2) - 14; 
+    let y = rect.top + (height / 2) - 16; 
     
     const chatRect = chatInput.getBoundingClientRect();
     
@@ -250,13 +255,9 @@ function updatePButtonPosition() {
     pBtnInstance.style.left = x + 'px';
     pBtnInstance.style.top = y + 'px';
   } else {
-    // Empty input: place quietly on the right side so it doesn't cover placeholders
-    const rect = chatInput.getBoundingClientRect();
-    // Claude vs Gemini layout adjustment
-    const offsetRight = currentHostname.includes("claude") ? 50 : 100;
-    
-    pBtnInstance.style.left = (rect.right - offsetRight) + 'px';
-    pBtnInstance.style.top = (rect.top + (rect.height / 2) - 14) + 'px';
+    // Empty input: hide the button completely!
+    pBtnInstance.style.opacity = '0';
+    pBtnInstance.style.pointerEvents = 'none';
   }
 }
 
@@ -504,10 +505,9 @@ function handlePromptize(triggerBtn) {
 }
 
 function resetPButton(btn) {
-  btn.innerHTML = 'P';
-  btn.style.background = 'linear-gradient(135deg, #8553f4, #3b82f6)';
-  btn.style.boxShadow = '0 2px 8px rgba(133, 83, 244, 0.4)';
-  btn.style.fontSize = '14px';
+  const logoUrl = chrome.runtime.getURL('icons/p_logo.png');
+  btn.innerHTML = `<img src="${logoUrl}" style="width: 26px; height: 26px; object-fit: contain; pointer-events: none;" alt="Promptizer" />`;
+  btn.style.background = 'transparent';
 }
 
 // Simple toast notification

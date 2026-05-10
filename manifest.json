@@ -42,5 +42,15 @@
                 "content.js"
             ]
         }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["icons/p_logo.png"],
+            "matches": [
+                "*://chatgpt.com/*",
+                "*://gemini.google.com/*",
+                "*://claude.ai/*"
+            ]
+        }
     ]
 }
