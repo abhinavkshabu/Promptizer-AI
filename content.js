@@ -115,64 +115,27 @@ closeBtn.addEventListener('click', () => {
 });
 
 // ─────────────────────────────────────────────────────
-// 6. INJECT "P" BUTTON INSIDE EACH AI'S CHATBOX
+// 6. INJECT "P" BUTTON AS A DYNAMIC TRACKING OVERLAY
 // ─────────────────────────────────────────────────────
-
-// Platform-specific selectors for the chat input container areas
-function getChatboxContainerSelector() {
-  if (aiContext === "ChatGPT") {
-    // ChatGPT: the form that wraps the input area
-    return 'form.w-full, main form, div[class*="composer"] form, form[data-testid], div.relative.flex';
-  } else if (aiContext === "Google Gemini") {
-    // Gemini: the rich text area container
-    return '.input-area-container, .text-input-field, div[class*="input-area"], .ql-editor-container, rich-textarea';
-  } else if (aiContext === "Claude") {
-    // Claude: the input wrapper
-    return 'div[class*="ProseMirror"], fieldset, div.flex.flex-col, div[class*="composer"]';
-  }
-  return 'form, div[contenteditable="true"]';
-}
 
 // Attempt to find the actual text input element
 function findChatInput() {
-  // Try common selectors in priority order
   const selectors = [
     'rich-textarea .ql-editor',       // Gemini
     'rich-textarea p',                  // Gemini fallback
     'div.ProseMirror',                  // Claude
-    '.ProseMirror',                     // Claude fallback
     '#prompt-textarea',                 // ChatGPT
     'div[contenteditable="true"]',      // Generic
     'textarea'                          // Fallback
   ];
   for (const sel of selectors) {
     const el = document.querySelector(sel);
-    if (el) return el;
+    if (el && el.offsetHeight > 0) return el;
   }
   return null;
 }
 
-// Find or create the closest positioning parent near the chatbox
-function findInsertionTarget() {
-  // Try to find the input area wrapper we can append a button to
-  if (aiContext === "ChatGPT") {
-    // ChatGPT: find the toolbar/button area near the input
-    const form = document.querySelector('form') || document.querySelector('div[class*="stretch"]');
-    if (form) return form;
-  } else if (aiContext === "Google Gemini") {
-    const container = document.querySelector('.input-area-container') ||
-                      document.querySelector('.text-input-field_textarea-wrapper') ||
-                      document.querySelector('rich-textarea')?.parentElement?.parentElement;
-    if (container) return container;
-  } else if (aiContext === "Claude") {
-    const fieldset = document.querySelector('fieldset') ||
-                     document.querySelector('div[class*="ProseMirror"]')?.parentElement;
-    if (fieldset) return fieldset;
-  }
-  return null;
-}
-
-let pButtonInjected = false;
+let pBtnInstance = null;
 
 function createPButton() {
   const pBtn = document.createElement('div');
@@ -180,12 +143,10 @@ function createPButton() {
   pBtn.title = 'Promptize your text';
   pBtn.innerHTML = 'P';
   
-  // Inline styles to survive any page CSS reset
+  // Fixed positioning overlay
   Object.assign(pBtn.style, {
     width: '28px',
     height: '28px',
-    minWidth: '28px',
-    minHeight: '28px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -198,13 +159,14 @@ function createPButton() {
     fontWeight: '800',
     fontSize: '14px',
     boxShadow: '0 2px 8px rgba(133, 83, 244, 0.4)',
-    transition: 'all 0.2s ease',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease', // Only animate aesthetic properties
     zIndex: '2147483647',
-    position: 'relative',
-    flexShrink: '0',
+    position: 'fixed', // Vital for tracking overlay
     userSelect: 'none',
     lineHeight: '1',
-    letterSpacing: '0'
+    pointerEvents: 'auto',
+    left: '-9999px', // Start hidden offscreen
+    top: '-9999px'
   });
 
   // Hover effects
@@ -227,81 +189,83 @@ function createPButton() {
   return pBtn;
 }
 
-// Strategy: inject the P button inside/near the chatbox input area
+// Ensure the button exists in the DOM at the body level
 function injectPButton() {
-  if (pButtonInjected && document.getElementById('promptizer-p-trigger')) return;
-  
-  pButtonInjected = false; // reset if element was removed by SPA navigation
-  
-  const pBtn = createPButton();
+  if (!pBtnInstance || !document.body.contains(pBtnInstance)) {
+    pBtnInstance = createPButton();
+    document.body.appendChild(pBtnInstance);
+  }
+}
 
-  if (aiContext === "ChatGPT") {
-    // ChatGPT: Insert near the send button area
-    const sendBtnContainer = document.querySelector('button[data-testid="send-button"]')?.parentElement ||
-                              document.querySelector('form button[aria-label="Send prompt"]')?.parentElement ||
-                              document.querySelector('form div.flex.items-end') ||
-                              document.querySelector('form div.flex');
-    if (sendBtnContainer) {
-      // Insert before the send button
-      const sendBtn = sendBtnContainer.querySelector('button[data-testid="send-button"]') ||
-                      sendBtnContainer.querySelector('button[aria-label="Send prompt"]');
-      if (sendBtn) {
-        sendBtnContainer.insertBefore(pBtn, sendBtn);
-      } else {
-        sendBtnContainer.appendChild(pBtn);
-      }
-      pBtn.style.marginRight = '8px';
-      pButtonInjected = true;
-      return;
-    }
-  } else if (aiContext === "Google Gemini") {
-    // Gemini: The input area is complex. Let's find the rich-textarea
-    const richText = document.querySelector('rich-textarea');
-    if (richText) {
-      // Find the main chatbox wrapper to position absolute against
-      const wrapper = richText.closest('.text-input-field') || richText.parentElement;
-      if (wrapper) {
-        wrapper.style.position = 'relative';
-        pBtn.style.position = 'absolute';
-        
-        // Position it explicitly to the left of the mic/send buttons
-        // Gemini's buttons usually take up the right ~90px
-        pBtn.style.right = '110px'; 
-        pBtn.style.bottom = '14px';
-        pBtn.style.zIndex = '100';
-        
-        wrapper.appendChild(pBtn);
-        pButtonInjected = true;
-        return;
-      }
-    }
-  } else if (aiContext === "Claude") {
-    // Claude: Insert near the send button
-    const sendBtn = document.querySelector('button[aria-label="Send Message"]') ||
-                    document.querySelector('button[aria-label="Send message"]') ||
-                    document.querySelector('fieldset button:last-of-type') ||
-                    document.querySelector('button[class*="send"]');
-    if (sendBtn && sendBtn.parentElement) {
-      sendBtn.parentElement.insertBefore(pBtn, sendBtn);
-      pBtn.style.marginRight = '8px';
-      pButtonInjected = true;
-      return;
-    }
+// Dynamically track the text end coordinates
+function updatePButtonPosition() {
+  if (!pBtnInstance) return;
+
+  const chatInput = findChatInput();
+  if (!chatInput) {
+    pBtnInstance.style.display = 'none';
+    return;
   }
   
-  // Ultimate fallback: fixed position near bottom-right as last resort
-  if (!pButtonInjected) {
-    pBtn.style.position = 'fixed';
-    pBtn.style.bottom = '24px';
-    pBtn.style.right = '80px';
-    pBtn.style.width = '36px';
-    pBtn.style.height = '36px';
-    pBtn.style.fontSize = '16px';
-    pBtn.style.borderRadius = '10px';
-    pBtn.style.boxShadow = '0 4px 20px rgba(133, 83, 244, 0.5)';
-    document.body.appendChild(pBtn);
-    pButtonInjected = true;
+  pBtnInstance.style.display = 'flex';
+
+  if (chatInput.tagName === 'TEXTAREA') {
+     const rect = chatInput.getBoundingClientRect();
+     pBtnInstance.style.left = (rect.right - 40) + 'px';
+     pBtnInstance.style.top = (rect.bottom - 40) + 'px';
+     return;
   }
+
+  // Get ALL text nodes
+  const treeWalker = document.createTreeWalker(chatInput, NodeFilter.SHOW_TEXT, null, false);
+  let lastTextNode = null;
+  while(treeWalker.nextNode()) {
+    if (treeWalker.currentNode.length > 0) {
+      lastTextNode = treeWalker.currentNode;
+    }
+  }
+
+  // If we found text, track the end of it
+  if (lastTextNode && chatInput.textContent.trim().length > 0) {
+    const range = document.createRange();
+    range.setStart(lastTextNode, lastTextNode.length);
+    range.setEnd(lastTextNode, lastTextNode.length);
+    const rect = range.getBoundingClientRect();
+    
+    const height = rect.height || 24;
+    
+    let x = rect.right + 10;
+    let y = rect.top + (height / 2) - 14; 
+    
+    const chatRect = chatInput.getBoundingClientRect();
+    
+    // Keep it inside the chatbox horizontally
+    if (x > chatRect.right - 35) {
+      x = chatRect.right - 35; 
+    }
+    // Keep it inside the chatbox vertically
+    if (y < chatRect.top) y = chatRect.top + 4;
+    if (y > chatRect.bottom - 32) y = chatRect.bottom - 32;
+
+    pBtnInstance.style.left = x + 'px';
+    pBtnInstance.style.top = y + 'px';
+  } else {
+    // Empty input: place quietly on the right side so it doesn't cover placeholders
+    const rect = chatInput.getBoundingClientRect();
+    // Claude vs Gemini layout adjustment
+    const offsetRight = currentHostname.includes("claude") ? 50 : 100;
+    
+    pBtnInstance.style.left = (rect.right - offsetRight) + 'px';
+    pBtnInstance.style.top = (rect.top + (rect.height / 2) - 14) + 'px';
+  }
+}
+
+// Start tracking at 60fps equivalent using a fast interval for smooth typing follow
+let trackingInterval;
+function startTracking() {
+  injectPButton();
+  if (trackingInterval) clearInterval(trackingInterval);
+  trackingInterval = setInterval(updatePButtonPosition, 50);
 }
 
 // ─────────────────────────────────────────────────────
@@ -579,45 +543,16 @@ function showToast(message) {
 }
 
 // ─────────────────────────────────────────────────────
-// 8. OBSERVER: Watch for DOM changes and re-inject P button
+// 8. OBSERVER: Start the tracking loop
 // ─────────────────────────────────────────────────────
-
-// Use MutationObserver to handle SPA navigation and dynamic DOM
-function startObserver() {
-  // Initial attempt
-  injectPButton();
-
-  // Re-try periodically (SPAs like ChatGPT rebuild their DOM)
-  const retryInterval = setInterval(() => {
-    const existing = document.getElementById('promptizer-p-trigger');
-    if (!existing) {
-      pButtonInjected = false;
-      injectPButton();
-    }
-  }, 2000);
-
-  // Also observe DOM mutations
-  const observer = new MutationObserver(() => {
-    const existing = document.getElementById('promptizer-p-trigger');
-    if (!existing) {
-      pButtonInjected = false;
-      injectPButton();
-    }
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-}
 
 // Wait for page to be ready, then start
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(startObserver, 1500);
+    setTimeout(startTracking, 1500);
   });
 } else {
-  setTimeout(startObserver, 1500);
+  setTimeout(startTracking, 1500);
 }
 
 // 9. Auto-Paste Logic is now handled dynamically inside the result card above.
