@@ -237,7 +237,6 @@ function injectPButton() {
 
   if (aiContext === "ChatGPT") {
     // ChatGPT: Insert near the send button area
-    // The send button is typically inside the form, in a flex row at the bottom
     const sendBtnContainer = document.querySelector('button[data-testid="send-button"]')?.parentElement ||
                               document.querySelector('form button[aria-label="Send prompt"]')?.parentElement ||
                               document.querySelector('form div.flex.items-end') ||
@@ -251,42 +250,30 @@ function injectPButton() {
       } else {
         sendBtnContainer.appendChild(pBtn);
       }
-      pBtn.style.marginRight = '4px';
-      pButtonInjected = true;
-      return;
-    }
-    // Fallback: try to find any button row in the form
-    const form = document.querySelector('form');
-    if (form) {
-      const bottomRow = form.querySelector('div:last-child') || form;
-      bottomRow.appendChild(pBtn);
-      pBtn.style.marginLeft = '4px';
+      pBtn.style.marginRight = '8px';
       pButtonInjected = true;
       return;
     }
   } else if (aiContext === "Google Gemini") {
-    // Gemini: Insert near the send/submit button area
-    const sendBtn = document.querySelector('button.send-button') ||
-                    document.querySelector('button[aria-label="Send message"]') ||
-                    document.querySelector('.send-button-container button') ||
-                    document.querySelector('button[mattooltip="Send"]');
-    if (sendBtn && sendBtn.parentElement) {
-      sendBtn.parentElement.insertBefore(pBtn, sendBtn);
-      pBtn.style.marginRight = '6px';
-      pButtonInjected = true;
-      return;
-    }
-    // Fallback: find the input area's parent
-    const inputArea = document.querySelector('.input-area-container') ||
-                      document.querySelector('rich-textarea')?.closest('.input-area');
-    if (inputArea) {
-      inputArea.style.position = 'relative';
-      pBtn.style.position = 'absolute';
-      pBtn.style.right = '50px';
-      pBtn.style.bottom = '8px';
-      inputArea.appendChild(pBtn);
-      pButtonInjected = true;
-      return;
+    // Gemini: The input area is complex. Let's find the rich-textarea
+    const richText = document.querySelector('rich-textarea');
+    if (richText) {
+      // Find the main chatbox wrapper to position absolute against
+      const wrapper = richText.closest('.text-input-field') || richText.parentElement;
+      if (wrapper) {
+        wrapper.style.position = 'relative';
+        pBtn.style.position = 'absolute';
+        
+        // Position it explicitly to the left of the mic/send buttons
+        // Gemini's buttons usually take up the right ~90px
+        pBtn.style.right = '110px'; 
+        pBtn.style.bottom = '14px';
+        pBtn.style.zIndex = '100';
+        
+        wrapper.appendChild(pBtn);
+        pButtonInjected = true;
+        return;
+      }
     }
   } else if (aiContext === "Claude") {
     // Claude: Insert near the send button
@@ -296,18 +283,7 @@ function injectPButton() {
                     document.querySelector('button[class*="send"]');
     if (sendBtn && sendBtn.parentElement) {
       sendBtn.parentElement.insertBefore(pBtn, sendBtn);
-      pBtn.style.marginRight = '4px';
-      pButtonInjected = true;
-      return;
-    }
-    // Fallback: insert near the editable area
-    const proseMirror = document.querySelector('.ProseMirror');
-    if (proseMirror && proseMirror.parentElement) {
-      proseMirror.parentElement.style.position = 'relative';
-      pBtn.style.position = 'absolute';
-      pBtn.style.right = '8px';
-      pBtn.style.bottom = '8px';
-      proseMirror.parentElement.appendChild(pBtn);
+      pBtn.style.marginRight = '8px';
       pButtonInjected = true;
       return;
     }
