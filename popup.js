@@ -1,38 +1,54 @@
 // popup.js
 document.addEventListener('DOMContentLoaded', () => {
-    const frameworkSelect = document.getElementById('framework');
-    const personaSelect = document.getElementById('persona');
-    const saveBtn = document.getElementById('saveBtn');
+    const modeButtons = Array.from(document.querySelectorAll('.mode-btn'));
+    const statusText = document.getElementById('statusText');
+    const storage = globalThis.chrome && chrome.storage && chrome.storage.sync;
 
-    // 1. Load previously saved settings when the menu opens
-    chrome.storage.sync.get(['framework', 'persona'], (result) => {
-        if (result.framework) {
-            frameworkSelect.value = result.framework;
+    function normalizeFramework(value) {
+        if (['coding', 'data_science', 'devops'].includes(value)) return 'coding';
+        if (['creative', 'image_gen', 'video_gen', 'audio_gen'].includes(value)) return 'creative';
+        return 'general';
+    }
+
+    function setActive(framework) {
+        modeButtons.forEach((button) => {
+            const isActive = button.dataset.framework === framework;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-checked', String(isActive));
+        });
+    }
+
+    function saveFramework(framework) {
+        setActive(framework);
+
+        if (!storage) {
+            statusText.textContent = 'Selected';
+            return;
         }
-        if (result.persona) {
-            personaSelect.value = result.persona;
-        }
+
+        storage.set({
+            framework,
+            persona: 'expert'
+        }, () => {
+            statusText.textContent = 'Saved';
+            setTimeout(() => {
+                statusText.textContent = '';
+            }, 1200);
+        });
+    }
+
+    modeButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            saveFramework(button.dataset.framework);
+        });
     });
 
-    // 2. Save new settings when the button is clicked
-    saveBtn.addEventListener('click', () => {
-        const selectedFramework = frameworkSelect.value;
-        const selectedPersona = personaSelect.value;
+    if (!storage) {
+        setActive('general');
+        return;
+    }
 
-        chrome.storage.sync.set({
-            framework: selectedFramework,
-            persona: selectedPersona
-        }, () => {
-            // Visual feedback
-            saveBtn.innerText = "✓ Settings Saved!";
-            saveBtn.style.background = "linear-gradient(135deg, #00ff7f, #00bfff)";
-            saveBtn.style.color = "#000";
-
-            setTimeout(() => {
-                saveBtn.innerText = "Save Preferences";
-                saveBtn.style.background = "linear-gradient(135deg, #8553f4, #3b82f6)";
-                saveBtn.style.color = "#fff";
-            }, 1500);
-        });
+    storage.get(['framework'], (result) => {
+        setActive(normalizeFramework(result.framework));
     });
 });
