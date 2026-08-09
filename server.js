@@ -296,6 +296,9 @@ For standard (non-media-generation) prompts, structure the rewritten prompt usin
    Replace every vague or unknown detail with a [DESCRIPTIVE_UPPERCASE_PLACEHOLDER].
    Each placeholder must be self-explanatory without documentation.
 
+8. DATA PRESERVATION
+   If the user's raw prompt contains code blocks, raw data, or quoted text, you MUST preserve that exact content verbatim in the rewritten prompt. DO NOT summarize or alter it. Append it to the end of the prompt under a section labeled '### USER PROVIDED DATA:' and wrap it in standard markdown code blocks.
+
 For media generation prompts (image_gen, video_gen, audio_gen), use the domain-specific
 format described in the DOMAIN section above instead.
 
