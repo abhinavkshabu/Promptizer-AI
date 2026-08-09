@@ -565,15 +565,16 @@ function replaceInputText(element, text) {
   // ── Contenteditable: pick strategy by platform ──
   if (element.isContentEditable) {
 
-    // Gemini (Quill) — execCommand works perfectly here
-    if (currentHostname.includes('gemini')) {
+    // Gemini and Claude both handle execCommand well. 
+    // If we use 'paste' on Claude, it turns large text into a 'PASTED' file attachment!
+    if (currentHostname.includes('gemini') || currentHostname.includes('claude')) {
       replaceViaExecCommand(element, text);
       dispatchInputEvents(element);
       return;
     }
 
-    // ChatGPT & Claude (ProseMirror) — paste simulation is most reliable
-    if (currentHostname.includes('chatgpt') || currentHostname.includes('claude')) {
+    // ChatGPT (ProseMirror) — paste simulation is most reliable here
+    if (currentHostname.includes('chatgpt')) {
       replaceViaPaste(element, text);
       return;
     }
@@ -628,8 +629,9 @@ function updatePromptizerPosition() {
   let x = rect.right - triggerWidth - margin;
   let y = rect.top - triggerHeight - 8;
 
+  // If the input box expands all the way to the top of the screen, just stick the button to the top edge
   if (y < 8) {
-    y = rect.bottom + 8;
+    y = 8;
   }
 
   x = clamp(x, 10, window.innerWidth - triggerWidth - 10);
