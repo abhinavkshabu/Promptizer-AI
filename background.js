@@ -448,9 +448,17 @@ async function getCachedBackend() {
     return data._backendCache || null;
 }
 
-// Check if cache is stale (older than 15 days)
+// Check if cache is stale
 function isCacheStale(cache) {
     if (!cache || !cache.detectedAt) return true;
+    
+    // If Gemini Nano wasn't ready last time, re-check much sooner (every 1 hour) 
+    // so the user isn't stuck on Groq for 15 days while the model downloads!
+    if (cache.backend === 'groq') {
+        const ONE_HOUR = 60 * 60 * 1000;
+        return (Date.now() - cache.detectedAt) > ONE_HOUR;
+    }
+
     return (Date.now() - cache.detectedAt) > BACKEND_CACHE_TTL_MS;
 }
 
