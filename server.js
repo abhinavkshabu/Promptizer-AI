@@ -443,8 +443,8 @@ app.post('/api/optimize', async (req, res) => {
     if (!rawText || typeof rawText !== 'string' || rawText.trim().length === 0) {
         return res.status(400).json({ error: "rawText is required and must be a non-empty string." });
     }
-    if (rawText.trim().length > 3000) {
-        return res.status(400).json({ error: "Your prompt exceeds the current limit. A more capable version is coming soon — stay tuned! ✨" });
+    if (rawText.trim().length > 30000) {
+        return res.status(400).json({ error: "Your prompt exceeds the 30,000 character limit. Please shorten it." });
     }
 
     const systemInstruction = buildSystemInstruction(

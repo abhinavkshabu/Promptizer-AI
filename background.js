@@ -605,9 +605,9 @@ async function optimizePrompt(rawText, aiContext, framework, persona) {
     const backendInfo = await getBackendFast();
     const preferredBackend = backendInfo.backend; // 'gemini-nano' or 'groq'
 
-    // Only enforce 3000-char limit for Groq (cloud API); local Gemini has no limit
-    if (preferredBackend !== 'gemini-nano' && rawText.trim().length > 3000) {
-        return { error: 'Your prompt exceeds the current limit. A more capable version is coming soon- stay tuned.' };
+    // Enforce 30000-char limit for all backends equally
+    if (rawText.trim().length > 30000) {
+        return { error: 'Your prompt exceeds the 30,000 character limit. Please shorten it.' };
     }
 
     const systemInstruction = buildSystemInstruction(
