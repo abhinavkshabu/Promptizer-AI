@@ -454,16 +454,39 @@ let currentTargetInput = null;
 let trackingInterval = null;
 let toastTimer = null;
 
-// 5. Find the active chat input
+// 5. Find the active chat input — platform-specific selectors
 function findChatInput() {
-  const selectors = [
-    'rich-textarea .ql-editor',
-    'rich-textarea p',
+  let selectors = [];
+
+  if (currentHostname.includes('chatgpt')) {
+    selectors = [
+      '#prompt-textarea',                                // ChatGPT main input (contenteditable div or textarea)
+      'div[id="prompt-textarea"]',                       // Explicit div variant
+      'form textarea',                                   // Legacy textarea inside form
+      'div.ProseMirror[contenteditable="true"]',         // ProseMirror variant
+    ];
+  } else if (currentHostname.includes('gemini')) {
+    selectors = [
+      'rich-textarea .ql-editor',                        // Gemini Quill editor
+      'rich-textarea p',                                 // Gemini paragraph inside Quill
+      'div.ql-editor[contenteditable="true"]',           // Direct Quill editor ref
+    ];
+  } else if (currentHostname.includes('claude')) {
+    selectors = [
+      'div.ProseMirror[contenteditable="true"]',         // Claude ProseMirror editor
+      'div[contenteditable="true"].ProseMirror',         // Alt class order
+      'fieldset div[contenteditable="true"]',            // Claude fieldset wrapper
+      'div[contenteditable="true"][data-placeholder]',   // Placeholder-based match
+    ];
+  }
+
+  // Generic fallbacks for any platform
+  selectors.push(
     'div.ProseMirror',
     '#prompt-textarea',
     'div[contenteditable="true"]',
     'textarea'
-  ];
+  );
 
   for (const selector of selectors) {
     const element = document.querySelector(selector);
@@ -481,38 +504,105 @@ function getInputText(element) {
   return element.innerText || element.textContent || '';
 }
 
-function dispatchInputEvent(element, text) {
-  try {
-    element.dispatchEvent(new InputEvent('input', {
-      bubbles: true,
-      cancelable: true,
-      data: text,
-      inputType: 'insertText'
-    }));
-  } catch (error) {
-    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-  }
+// Dispatch the full event sequence that React and other frameworks expect
+function dispatchInputEvents(element) {
+  element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+  element.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
 }
 
-function replaceInputText(element, text) {
-  if (!element) return;
+// ── Strategy A: React-controlled <textarea> (ChatGPT legacy) ──
+function replaceReactTextarea(element, text) {
+  const nativeSetter = Object.getOwnPropertyDescriptor(
+    window.HTMLTextAreaElement.prototype, 'value'
+  )?.set;
 
-  element.focus();
-
-  if (typeof element.value === 'string') {
+  if (nativeSetter) {
+    nativeSetter.call(element, text);
+  } else {
     element.value = text;
-    dispatchInputEvent(element, text);
-    return;
   }
+  dispatchInputEvents(element);
+}
 
+// ── Strategy B: DataTransfer paste simulation (ProseMirror — ChatGPT & Claude) ──
+function replaceViaPaste(element, text) {
   const selection = window.getSelection();
   const range = document.createRange();
   range.selectNodeContents(element);
   selection.removeAllRanges();
   selection.addRange(range);
 
-  document.execCommand('insertText', false, text);
-  dispatchInputEvent(element, text);
+  const dt = new DataTransfer();
+  dt.setData('text/plain', text);
+  const pasteEvent = new ClipboardEvent('paste', {
+    bubbles: true,
+    cancelable: true,
+    clipboardData: dt
+  });
+  element.dispatchEvent(pasteEvent);
+}
+
+// ── Strategy C: execCommand insertText (Quill — Gemini) ──
+function replaceViaExecCommand(element, text) {
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  selection.removeAllRanges();
+  selection.addRange(range);
+  return document.execCommand('insertText', false, text);
+}
+
+function replaceInputText(element, text) {
+  if (!element) return;
+  element.focus();
+
+  // ── Textarea: use React nativeInputValueSetter ──
+  if (element.tagName === 'TEXTAREA') {
+    replaceReactTextarea(element, text);
+    return;
+  }
+
+  // ── Contenteditable: pick strategy by platform ──
+  if (element.isContentEditable) {
+
+    // Gemini (Quill) — execCommand works perfectly here
+    if (currentHostname.includes('gemini')) {
+      replaceViaExecCommand(element, text);
+      dispatchInputEvents(element);
+      return;
+    }
+
+    // ChatGPT & Claude (ProseMirror) — paste simulation is most reliable
+    if (currentHostname.includes('chatgpt') || currentHostname.includes('claude')) {
+      replaceViaPaste(element, text);
+      return;
+    }
+
+    // Unknown platform — try execCommand first, fall back to paste
+    if (!replaceViaExecCommand(element, text)) {
+      replaceViaPaste(element, text);
+    }
+    dispatchInputEvents(element);
+    return;
+  }
+
+  // ── Generic <input> fallback ──
+  if (typeof element.value === 'string') {
+    const nativeSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype, 'value'
+    )?.set;
+    if (nativeSetter) {
+      nativeSetter.call(element, text);
+    } else {
+      element.value = text;
+    }
+    dispatchInputEvents(element);
+    return;
+  }
+
+  // ── Last resort: direct DOM write ──
+  element.textContent = text;
+  dispatchInputEvents(element);
 }
 
 function clamp(value, min, max) {
@@ -735,6 +825,12 @@ function handlePromptize() {
     context: aiContext
   }, (response) => {
     setTriggerLoading(false);
+
+    // Handle new error format from background.js
+    if (response && response.error) {
+      renderError(response.error);
+      return;
+    }
 
     const optimizedText = response && response.optimizedText ? response.optimizedText : '';
     const hasError = !optimizedText || optimizedText.startsWith('Error:');

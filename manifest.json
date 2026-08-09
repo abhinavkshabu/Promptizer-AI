@@ -2,17 +2,19 @@
     "manifest_version": 3,
     "name": "Promptizer AI",
     "version": "1.0.0",
-    "description": "AN AI POWERED PROMPT GENERATOR",
+    "description": "AI-powered prompt optimizer for ChatGPT, Gemini & Claude. Instantly rewrite any prompt into a professional, high-performance version.",
     "permissions": [
         "activeTab",
         "scripting",
-        "storage"
+        "storage",
+        "alarms",
+        "aiLanguageModel"
     ],
     "host_permissions": [
         "*://chatgpt.com/*",
         "*://gemini.google.com/*",
         "*://claude.ai/*",
-        "https://*.onrender.com/*"
+        "https://promptizer-ai.onrender.com/*"
     ],
     "icons": {
         "16": "icons/icon16.png",

@@ -74,6 +74,16 @@
             line-height: 1.25;
         }
 
+        .section-label {
+            display: block;
+            margin: 0 0 7px 2px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 750;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
         .mode-list {
             display: grid;
             gap: 9px;
@@ -120,6 +130,14 @@
             line-height: 1;
         }
 
+        .mode-desc {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
         .mode-check {
             display: grid;
             width: 24px;
@@ -147,6 +165,48 @@
             stroke-width: 2.4;
         }
 
+        /* ── Persona chips ── */
+        .divider {
+            height: 1px;
+            margin: 14px 0;
+            border: none;
+            background: var(--line);
+        }
+
+        .persona-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .persona-chip {
+            display: inline-flex;
+            align-items: center;
+            height: 30px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--ink);
+            cursor: pointer;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 650;
+            transition: border-color 0.16s ease, background 0.16s ease, transform 0.14s ease;
+        }
+
+        .persona-chip:hover {
+            border-color: #b8a98f;
+            background: #fffdf8;
+            transform: translateY(-1px);
+        }
+
+        .persona-chip.is-active {
+            border-color: var(--teal);
+            background: #e4f5f0;
+            color: var(--teal);
+        }
+
         .status {
             min-height: 16px;
             margin: 12px 0 0;
@@ -154,6 +214,14 @@
             font-size: 11px;
             font-weight: 650;
             line-height: 1.4;
+            text-align: center;
+        }
+
+        .version {
+            margin: 10px 0 0;
+            color: #b5a998;
+            font-size: 10px;
+            font-weight: 600;
             text-align: center;
         }
     </style>
@@ -167,13 +235,17 @@
             </div>
             <div>
                 <h1>Promptizer</h1>
-                <div class="subtitle">Choose a mode</div>
+                <div class="subtitle">AI prompt optimizer</div>
             </div>
         </header>
 
+        <span class="section-label">Mode</span>
         <section class="mode-list" role="radiogroup" aria-label="Prompting framework">
             <button class="mode-btn" type="button" data-framework="general" role="radio" aria-checked="false">
-                <span class="mode-title">General</span>
+                <div>
+                    <span class="mode-title">General</span>
+                    <div class="mode-desc">Balanced optimization for any task</div>
+                </div>
                 <span class="mode-check" aria-hidden="true">
                     <svg viewBox="0 0 24 24">
                         <path d="M20 6 9 17l-5-5"></path>
@@ -181,7 +253,10 @@
                 </span>
             </button>
             <button class="mode-btn" type="button" data-framework="coding" role="radio" aria-checked="false">
-                <span class="mode-title">Technical</span>
+                <div>
+                    <span class="mode-title">Technical</span>
+                    <div class="mode-desc">Code, DevOps & data science</div>
+                </div>
                 <span class="mode-check" aria-hidden="true">
                     <svg viewBox="0 0 24 24">
                         <path d="M20 6 9 17l-5-5"></path>
@@ -189,7 +264,10 @@
                 </span>
             </button>
             <button class="mode-btn" type="button" data-framework="creative" role="radio" aria-checked="false">
-                <span class="mode-title">Creative</span>
+                <div>
+                    <span class="mode-title">Creative</span>
+                    <div class="mode-desc">Writing, images, video & audio</div>
+                </div>
                 <span class="mode-check" aria-hidden="true">
                     <svg viewBox="0 0 24 24">
                         <path d="M20 6 9 17l-5-5"></path>
@@ -198,7 +276,18 @@
             </button>
         </section>
 
+        <hr class="divider">
+
+        <span class="section-label">Response Style</span>
+        <div class="persona-row" role="radiogroup" aria-label="Response persona">
+            <button class="persona-chip" type="button" data-persona="expert" role="radio" aria-checked="false">Expert</button>
+            <button class="persona-chip" type="button" data-persona="concise" role="radio" aria-checked="false">Concise</button>
+            <button class="persona-chip" type="button" data-persona="teacher" role="radio" aria-checked="false">Teacher</button>
+            <button class="persona-chip" type="button" data-persona="peer" role="radio" aria-checked="false">Peer</button>
+        </div>
+
         <p class="status" id="statusText" role="status" aria-live="polite"></p>
+        <p class="version">v1.0.0</p>
     </main>
 
     <script src="popup.js"></script>

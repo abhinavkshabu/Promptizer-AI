@@ -1,6 +1,7 @@
 // popup.js
 document.addEventListener('DOMContentLoaded', () => {
     const modeButtons = Array.from(document.querySelectorAll('.mode-btn'));
+    const personaChips = Array.from(document.querySelectorAll('.persona-chip'));
     const statusText = document.getElementById('statusText');
     const storage = globalThis.chrome && chrome.storage && chrome.storage.sync;
 
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'general';
     }
 
-    function setActive(framework) {
+    function setActiveFramework(framework) {
         modeButtons.forEach((button) => {
             const isActive = button.dataset.framework === framework;
             button.classList.toggle('is-active', isActive);
@@ -18,37 +19,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function saveFramework(framework) {
-        setActive(framework);
+    function setActivePersona(persona) {
+        personaChips.forEach((chip) => {
+            const isActive = chip.dataset.persona === persona;
+            chip.classList.toggle('is-active', isActive);
+            chip.setAttribute('aria-checked', String(isActive));
+        });
+    }
 
+    function flashStatus(text) {
+        statusText.textContent = text;
+        setTimeout(() => {
+            statusText.textContent = '';
+        }, 1200);
+    }
+
+    function save(framework, persona) {
         if (!storage) {
-            statusText.textContent = 'Selected';
+            flashStatus('Selected');
             return;
         }
 
-        storage.set({
-            framework,
-            persona: 'expert'
-        }, () => {
-            statusText.textContent = 'Saved';
-            setTimeout(() => {
-                statusText.textContent = '';
-            }, 1200);
+        storage.set({ framework, persona }, () => {
+            flashStatus('Saved');
         });
     }
 
+    function getCurrentSettings() {
+        const activeFramework = modeButtons.find(b => b.classList.contains('is-active'));
+        const activePersona = personaChips.find(c => c.classList.contains('is-active'));
+        return {
+            framework: activeFramework?.dataset.framework || 'general',
+            persona: activePersona?.dataset.persona || 'expert'
+        };
+    }
+
+    // Framework buttons
     modeButtons.forEach((button) => {
         button.addEventListener('click', () => {
-            saveFramework(button.dataset.framework);
+            const framework = button.dataset.framework;
+            setActiveFramework(framework);
+            const settings = getCurrentSettings();
+            save(framework, settings.persona);
         });
     });
 
+    // Persona chips
+    personaChips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+            const persona = chip.dataset.persona;
+            setActivePersona(persona);
+            const settings = getCurrentSettings();
+            save(settings.framework, persona);
+        });
+    });
+
+    // Load saved settings
     if (!storage) {
-        setActive('general');
+        setActiveFramework('general');
+        setActivePersona('expert');
         return;
     }
 
-    storage.get(['framework'], (result) => {
-        setActive(normalizeFramework(result.framework));
+    storage.get(['framework', 'persona'], (result) => {
+        setActiveFramework(normalizeFramework(result.framework));
+        setActivePersona(result.persona || 'expert');
     });
 });

@@ -217,6 +217,48 @@ You do NOT explain. You do NOT compare. You do NOT score.
 You ONLY produce the rewritten prompt.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## EMOTIONAL INTELLIGENCE — Read Between the Lines
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Before rewriting, silently analyze the user's raw prompt for:
+
+1. EMOTIONAL STATE: Detect the user's underlying emotion from their language.
+   - Frustration signals: "I keep trying", "nothing works", "help me fix", typos, ALL CAPS
+   - Excitement signals: "I just had an idea!", exclamation marks, expansive language
+   - Anxiety signals: "I need this ASAP", "deadline", "urgent", "my boss wants"
+   - Curiosity signals: "I wonder", "what if", "how does", exploratory phrasing
+   - Overwhelm signals: "I don't even know where to start", vague/scattered input
+   - Confidence signals: technical jargon, precise language, specific requirements
+
+2. TRUE INTENT: Identify what the user actually wants vs. what they literally typed.
+   - A user typing "fix my code" likely wants debugging AND an explanation of what went wrong.
+   - A user typing "write me a poem" may want emotional expression, not literary analysis.
+   - A user typing "help with my resume" wants to land a job, not just format text.
+   - Always optimize for the deeper goal behind the surface request.
+
+3. CALIBRATE THE REWRITE accordingly:
+   - If frustrated → assign a patient, solution-oriented persona; add a constraint
+     that the response should acknowledge the difficulty before solving
+   - If excited → match the energy; assign a bold, visionary persona; lean into
+     creative possibilities rather than heavy constraints
+   - If anxious/urgent → assign an efficient, decisive persona; front-load the
+     most critical output; add time-aware constraints ("prioritize actionable steps")
+   - If curious → assign an exploratory, teaching-oriented persona; include
+     "explain the reasoning" in the approach
+   - If overwhelmed → assign a structured, step-by-step mentor persona; break the
+     objective into sequential phases; add a constraint for progressive complexity
+   - If confident/technical → match their expertise level; skip basics; assign a
+     peer-level specialist persona; use domain-specific constraints
+
+4. TONE THREADING: The detected emotion should subtly influence:
+   - The warmth or directness of the PERSONA LINE
+   - The specificity of the CONTEXT (add empathetic framing when needed)
+   - The phrasing of CONSTRAINTS (supportive vs. demanding)
+   - The structure of FORMAT (simple and clear for overwhelmed users, rich for confident ones)
+
+Never explicitly mention the user's emotions in the rewritten prompt.
+The emotional calibration should be invisible but deeply felt in the output's tone and structure.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## O — OUTPUT (Exact format you must return)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Return ONLY the rewritten prompt — nothing before it, nothing after it.
@@ -286,6 +328,7 @@ COSTAR
 PLATFORM CALIBRATION
 Target model: ${aiContext || 'general-purpose AI (ChatGPT / Claude / Gemini)'}.
 Exploit its formatting strengths. Avoid its known failure patterns.
+CRITICAL FORMATTING DIRECTIVE: Always instruct the AI to use the best possible formatting for its platform (e.g., Markdown, structured headers, bolding, lists, and tables) to ensure maximum readability and visual hierarchy.
 
 SELF-VERIFICATION LOOP (for high-stakes or complex prompts only)
 Append inside the rewritten prompt:
@@ -317,6 +360,9 @@ If any item fails, revise before responding.
 - If the input is a single word →
   reconstruct a full professional prompt from scratch based on the most
   common high-value use case for that word
+- If the input reveals strong emotion (frustration, excitement, anxiety) →
+  honor that emotion in the rewrite's tone and persona calibration;
+  never flatten emotional prompts into sterile, clinical rewrites
 - If the input contains harmful or unethical intent →
   refuse with only: "This prompt cannot be rewritten as it violates usage policies."`;
 }
@@ -340,11 +386,11 @@ OBJECTIVE: Write a 600-word short story narrated from the car's point of view, w
 APPROACH: First, establish the car's voice with one hyper-specific sensory detail. Then build the rising action around a family secret revealed on a road trip. Finally, resolve with the car's last journey and who is behind the wheel.
 
 CONSTRAINTS:
-- ✅ Must include one moment of pure mechanical description (engine, suspension, brakes)
-- ✅ Each generation must be distinguished by a distinct emotional register
-- ❌ No generic "freedom of the open road" metaphors
-- ❌ No dialogue-heavy scenes — action and observation only
-- 📐 620 words maximum. End on an ambiguous, unresolved final line.
+- Must include one moment of pure mechanical description (engine, suspension, brakes)
+- Each generation must be distinguished by a distinct emotional register
+- No generic "freedom of the open road" metaphors
+- No dialogue-heavy scenes — action and observation only
+- 620 words maximum. End on an ambiguous, unresolved final line.
 
 FORMAT: Unbroken prose paragraphs. No headers, no section labels, no author notes.`
     },
@@ -370,11 +416,11 @@ FORMAT — Output each section with its label:
 5. CTA: Single verb-led button text + one urgency trigger
 
 CONSTRAINTS:
-- ✅ Must pass Flesch Reading Ease 65+ (Grade 7 level)
-- ✅ Every claim must be tied to a specific, believable number or result
-- ❌ Zero buzzwords: "game-changing", "revolutionary", "synergy", "seamless", "innovative"
-- ❌ No more than 3 sentences per paragraph
-- 📐 Total body under 150 words`
+- Must pass Flesch Reading Ease 65+ (Grade 7 level)
+- Every claim must be tied to a specific, believable number or result
+- Zero buzzwords: "game-changing", "revolutionary", "synergy", "seamless", "innovative"
+- No more than 3 sentences per paragraph
+- Total body under 150 words`
     },
     {
         role: "user",
@@ -398,7 +444,7 @@ app.post('/api/optimize', async (req, res) => {
         return res.status(400).json({ error: "rawText is required and must be a non-empty string." });
     }
     if (rawText.trim().length > 3000) {
-        return res.status(400).json({ error: "rawText exceeds the 3000-character limit." });
+        return res.status(400).json({ error: "Your prompt exceeds the current limit. A more capable version is coming soon — stay tuned! ✨" });
     }
 
     const systemInstruction = buildSystemInstruction(
@@ -464,6 +510,6 @@ app.get('/health', (req, res) => {
 // ─────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Promptizer Server running → http://localhost:${PORT}`);
-    console.log(`🔑 GROQ_API_KEY: ${process.env.GROQ_API_KEY ? "✅ Loaded" : "❌ MISSING — check .env"}`);
+    console.log(`Promptizer Server running → http://localhost:${PORT}`);
+    console.log(`GROQ_API_KEY: ${process.env.GROQ_API_KEY ? "Loaded" : "MISSING — check .env"}`);
 });
