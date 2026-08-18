@@ -4,7 +4,8 @@
     "description": "Backend brain for the Promptizer Chrome Extension",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js"
+        "start": "node server.js",
+        "zip:ext": "powershell Compress-Archive -Force -Path manifest.json,background.js,content.js,popup.html,popup.js,icons -DestinationPath promptizer-ai-v1.0.0.zip"
     },
     "dependencies": {
         "cors": "^2.8.5",

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Promptizer AI</title>
+    <meta name="description" content="Promptizer AI privacy policy. We don't store your prompts. Learn exactly how your data is handled.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --border: rgba(255,255,255,0.1);
+            --text: #f0f0f0;
+            --muted: #888888;
+            --accent: #5eead4;
+            --accent-dim: rgba(94,234,212,0.12);
+            --green: #4ade80;
+            --green-dim: rgba(74,222,128,0.1);
+            --red: #f87171;
+            --red-dim: rgba(248,113,113,0.1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 40px;
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .nav-name {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 2px 8px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            padding: 80px 40px 60px;
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border: 1px solid rgba(94,234,212,0.3);
+            border-radius: 999px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #5eead4, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            color: var(--muted);
+            font-size: 16px;
+            max-width: 500px;
+            margin: 0 auto 8px;
+        }
+
+        .hero-date {
+            color: #555;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* ── Summary cards ── */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            max-width: 760px;
+            margin: 0 auto 64px;
+            padding: 0 40px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .summary-card.green {
+            border-color: rgba(74,222,128,0.25);
+            background: var(--green-dim);
+        }
+
+        .summary-card.red {
+            border-color: rgba(248,113,113,0.25);
+            background: var(--red-dim);
+        }
+
+        .card-icon {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .summary-card.green .card-title { color: var(--green); }
+        .summary-card.red .card-title { color: var(--red); }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* ── Content ── */
+        .content {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section p {
+            color: #c0c0c0;
+            margin-bottom: 12px;
+        }
+
+        .section p:last-child { margin-bottom: 0; }
+
+        .highlight {
+            display: inline;
+            background: var(--accent-dim);
+            color: var(--accent);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 12px 14px;
+            color: #c0c0c0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: top;
+        }
+
+        .data-table tr:last-child td { border-bottom: none; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge.no { background: var(--green-dim); color: var(--green); }
+        .badge.yes { background: var(--red-dim); color: var(--red); }
+        .badge.local { background: var(--accent-dim); color: var(--accent); }
+
+        .contact-box {
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .contact-icon {
+            font-size: 28px;
+            flex: 0 0 auto;
+        }
+
+        .contact-text {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .contact-text a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-text a:hover { text-decoration: underline; }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 28px 40px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            nav { padding: 12px 20px; }
+            .hero { padding: 60px 20px 40px; }
+            .summary-grid { padding: 0 20px; }
+            .content { padding: 0 20px 80px; }
+            footer { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+    <a href="#" class="nav-brand">
+        <div class="nav-logo">⚡</div>
+        <span class="nav-name">Promptizer AI</span>
+    </a>
+    <span class="nav-badge">Privacy Policy</span>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-tag">🔒 Your data. Your privacy.</div>
+    <h1>We don't store <span>your prompts.</span></h1>
+    <p class="hero-sub">Plain language. No legalese. Here's exactly what Promptizer AI does (and doesn't do) with your data.</p>
+    <p class="hero-date">Last updated: August 9, 2026</p>
+</section>
+
+<!-- Summary cards -->
+<div class="summary-grid">
+    <div class="summary-card green">
+        <div class="card-icon">🚫</div>
+        <div class="card-title">No prompt storage</div>
+        <div class="card-desc">Your prompts are processed and immediately discarded. Nothing is saved.</div>
+    </div>
+    <div class="summary-card green">
+        <div class="card-icon">👤</div>
+        <div class="card-title">No personal data</div>
+        <div class="card-desc">We never collect your name, email, IP address, or any account info.</div>
+    </div>
+    <div class="summary-card green">
+        <div class="card-icon">📱</div>
+        <div class="card-title">On-device option</div>
+        <div class="card-desc">When Gemini Nano is available, your prompt never leaves your device.</div>
+    </div>
+    <div class="summary-card green">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">No API keys in extension</div>
+        <div class="card-desc">All API keys are stored server-side. The extension contains none.</div>
+    </div>
+</div>
+
+<!-- Content -->
+<main class="content">
+
+    <section class="section">
+        <h2>What Promptizer Does</h2>
+        <p>Promptizer AI is a Chrome extension that optimizes prompts for AI chatbots (ChatGPT, Google Gemini, Claude). When you click the Promptize button, your prompt text is processed to create an improved version and returned directly to you.</p>
+        <p>That's it. The extension has one job and doesn't do anything in the background beyond a lightweight server ping every 14 minutes to keep the cloud backend warm.</p>
+    </section>
+
+    <section class="section">
+        <h2>Data We Collect</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Data Type</th>
+                    <th>Collected?</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Your prompt text</td>
+                    <td><span class="badge no">Processed only</span></td>
+                    <td>Sent to our server for optimization, then discarded. Never stored or logged.</td>
+                </tr>
+                <tr>
+                    <td>Extension preferences</td>
+                    <td><span class="badge local">Local only</span></td>
+                    <td>Your chosen mode and persona are saved in Chrome's local storage. Never sent anywhere.</td>
+                </tr>
+                <tr>
+                    <td>Name / Email</td>
+                    <td><span class="badge no">Never</span></td>
+                    <td>We don't collect any personally identifiable information.</td>
+                </tr>
+                <tr>
+                    <td>Browsing history</td>
+                    <td><span class="badge no">Never</span></td>
+                    <td>The extension only activates on ChatGPT, Gemini, and Claude.</td>
+                </tr>
+                <tr>
+                    <td>IP addresses</td>
+                    <td><span class="badge no">Never tracked</span></td>
+                    <td>Standard server logs may record IPs transiently but we don't track or store them.</td>
+                </tr>
+                <tr>
+                    <td>Cookies / trackers</td>
+                    <td><span class="badge no">Never</span></td>
+                    <td>Zero tracking, zero analytics, zero cookies.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="section">
+        <h2>How Prompt Processing Works</h2>
+        <p>When you click Promptize, your prompt text takes one of two paths:</p>
+        <p><strong>Path 1 — On-device (Gemini Nano):</strong> If your Chrome has the built-in Gemini Nano model available, the optimization runs entirely on your machine. <span class="highlight">Your prompt never leaves your device.</span></p>
+        <p><strong>Path 2 — Cloud (Groq via our server):</strong> Your prompt text is sent over HTTPS to our backend at <code style="background:rgba(255,255,255,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">promptizer-ai.onrender.com</code>, which forwards it to the Groq API for processing. The optimized result is returned to you immediately. <span class="highlight">No prompt data is stored at any point in this chain.</span></p>
+    </section>
+
+    <section class="section">
+        <h2>Third-Party Services</h2>
+        <p><strong>Groq:</strong> When using the cloud backend, your prompt is processed by <a href="https://groq.com" style="color:var(--accent);text-decoration:none;font-weight:600;">Groq's</a> LLM API under their privacy policy: <a href="https://groq.com/privacy-policy" style="color:var(--accent);font-size:13px;">groq.com/privacy-policy</a></p>
+        <p><strong>Chrome Built-in AI:</strong> On-device processing uses Google Chrome's Gemini Nano model. When this path is used, Promptizer has no involvement — no data is sent anywhere.</p>
+        <p><strong>Render:</strong> Our backend is hosted on <a href="https://render.com" style="color:var(--accent);text-decoration:none;font-weight:600;">Render.com</a>. Standard hosting infrastructure logs may apply per their terms.</p>
+    </section>
+
+    <section class="section">
+        <h2>Permissions Explained</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Permission</th>
+                    <th>Why We Need It</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code style="font-size:13px;">activeTab</code></td>
+                    <td>To read and replace text in the currently active chat input field.</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:13px;">scripting</code></td>
+                    <td>To inject the Promptize button into ChatGPT, Gemini, and Claude pages.</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:13px;">storage</code></td>
+                    <td>To save your chosen mode and persona preferences locally in Chrome.</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:13px;">alarms</code></td>
+                    <td>To periodically keep the cloud server warm and re-check backend availability.</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:13px;">aiLanguageModel</code></td>
+                    <td>To access Chrome's built-in Gemini Nano model for on-device prompt optimization.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="section">
+        <h2>Data Security</h2>
+        <p>All network communication uses <strong>HTTPS encryption</strong>. No API keys or credentials are stored in the extension itself — they live exclusively on the server. We do not sell, share, or monetize any data in any form.</p>
+    </section>
+
+    <section class="section">
+        <h2>Changes to This Policy</h2>
+        <p>We may update this policy from time to time. Changes will be reflected in the "Last updated" date at the top of this page. Continued use of the extension after changes constitutes acceptance.</p>
+    </section>
+
+    <section class="section">
+        <h2>Contact</h2>
+        <div class="contact-box">
+            <div class="contact-icon">✉️</div>
+            <div class="contact-text">
+                Questions about this privacy policy? Reach out via the extension's support page on the <strong>Chrome Web Store</strong>, or open an issue on the <a href="https://github.com/abhinavkshabu/Promptizer-AI" target="_blank">GitHub repository</a>.
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 Promptizer AI · Engineered by <strong>Abhinav Shabu</strong></p>
+</footer>
+
+</body>
+</html>
